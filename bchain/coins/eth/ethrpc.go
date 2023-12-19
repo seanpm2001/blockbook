@@ -229,6 +229,7 @@ func (b *EthereumRPC) subscribeEvents() error {
 
 	// new mempool transaction notifications handling
 	go func() {
+		duplicateCount := 0
 		for {
 			t, ok := b.NewTx.Read()
 			if !ok {
@@ -239,8 +240,10 @@ func (b *EthereumRPC) subscribeEvents() error {
 			added := b.Mempool.AddTransactionToMempool(hex)
 			if added {
 				b.PushHandler(bchain.NotificationNewTx)
+				glog.Info("rpc: new tx ", hex, ", duplicate count ", duplicateCount, ", ", time.Since(start))
+			} else {
+				duplicateCount++
 			}
-			glog.Info("rpc: new tx ", hex, ", ", added, ", ", time.Since(start))
 		}
 	}()
 
