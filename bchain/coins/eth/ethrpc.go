@@ -236,9 +236,11 @@ func (b *EthereumRPC) subscribeEvents() error {
 			}
 			start := time.Now()
 			hex := t.Hex()
-			b.Mempool.AddTransactionToMempool(hex)
-			b.PushHandler(bchain.NotificationNewTx)
-			glog.Info("rpc: new tx ", hex, ", ", time.Since(start))
+			added := b.Mempool.AddTransactionToMempool(hex)
+			if added {
+				b.PushHandler(bchain.NotificationNewTx)
+			}
+			glog.Info("rpc: new tx ", hex, ", ", added, ", ", time.Since(start))
 		}
 	}()
 
