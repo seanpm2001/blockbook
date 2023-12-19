@@ -234,12 +234,11 @@ func (b *EthereumRPC) subscribeEvents() error {
 			if !ok {
 				break
 			}
+			start := time.Now()
 			hex := t.Hex()
-			if glog.V(2) {
-				glog.Info("rpc: new tx ", hex)
-			}
 			b.Mempool.AddTransactionToMempool(hex)
 			b.PushHandler(bchain.NotificationNewTx)
+			glog.Info("rpc: new tx ", hex, ", ", time.Since(start))
 		}
 	}()
 
