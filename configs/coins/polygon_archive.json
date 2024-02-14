@@ -20,14 +20,13 @@
         "package_name": "backend-polygon-archive-bor",
         "package_revision": "satoshilabs-1",
         "system_user": "polygon",
-        "version": "1.2.8",
-        "binary_url": "https://github.com/maticnetwork/bor/archive/refs/tags/v1.2.8.tar.gz",
+        "version": "2.59.3",
+        "binary_url": "https://github.com/ledgerwatch/erigon/releases/download/v2.59.3/erigon_2.59.3_linux_amd64.tar.gz",
         "verification_type": "sha256",
-        "verification_source": "0cbd7b030af188de7c763988f2da8c0a4ead8a4437d0f89e98870131a352e4c0",
-        "extract_command": "mkdir backend/source && tar -C backend/source --strip 1 -xf v1.2.8.tar.gz && cd backend/source && make bor && mv build/bin/bor ../ && rm -rf ../source && echo",
+        "verification_source": "f9a96c1395841fb39617a6c85a778a4005e4d631dd1276a4f95f3c22227cd264",
+        "extract_command": "tar -C backend -xf",
         "exclude_files": [],
-        "exec_command_template": "/bin/sh -c '{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/polygon_archive_bor_exec.sh 2>> {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/{{.Coin.Alias}}.log'",
-        "exec_script": "polygon_archive_bor.sh",
+        "exec_command_template": "/bin/sh -c '{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/erigon --chain bor-mainnet --db.pagesize 16KB -bor.heimdall http://127.0.0.1:8173 --snap.keepblocks --db.size.limit 15TB --prune c --prune.c.older 1000000 -torrent.download.rate 32mb --nat none --datadir {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/erigon --port {{.Ports.BackendP2P}} --ws --ws.port {{.Ports.BackendRPC}} --http --http.port {{.Ports.BackendRPC}} --http.addr 127.0.0.1 --http.corsdomain \"*\" --http.vhosts \"*\" --http.api \"eth,net,web3,debug,txpool\" --authrpc.port {{.Ports.BackendAuthRpc}} --private.api.addr \"\" --torrent.port {{.Ports.BackendHttp}} --log.dir.path {{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend --log.dir.prefix {{.Coin.Alias}}'",
         "logrotate_files_template": "{{.Env.BackendDataPath}}/{{.Coin.Alias}}/backend/{{.Coin.Alias}}.log",
         "postinst_script_template": "wget https://raw.githubusercontent.com/maticnetwork/bor/v1.2.8/builder/files/genesis-mainnet-v1.json -O {{.Env.BackendInstallPath}}/{{.Coin.Alias}}/genesis.json",
         "service_type": "simple",
@@ -35,7 +34,13 @@
         "protect_memory": true,
         "mainnet": true,
         "server_config_file": "",
-        "client_config_file": ""
+        "client_config_file": "",
+        "platforms": {
+            "arm64": {
+                "binary_url": "https://github.com/ledgerwatch/erigon/releases/download/v2.59.3/erigon_2.59.3_linux_arm64.tar.gz",
+                "verification_source": "83230e44ef9b8af7831b72442241d98f1d31c6b4ba467ba1c42db5ccef6934de"
+            }
+        }
     },
     "blockbook": {
         "package_name": "blockbook-polygon-archive",
