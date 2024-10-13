@@ -566,6 +566,7 @@ func (b *EthereumRPC) getBlockRaw(hash string, height uint32, fullTxs bool) (jso
 		err = b.RPC.CallContext(ctx, &raw, "eth_getBlockByNumber", fmt.Sprintf("%#x", height), fullTxs)
 	}
 	if err != nil {
+		glog.Info("Unmarshal getBlockRaw ", string(raw))
 		return nil, errors.Annotatef(err, "hash %v, height %v", hash, height)
 	} else if len(raw) == 0 || (len(raw) == 4 && string(raw) == "null") {
 		return nil, bchain.ErrBlockNotFound
@@ -748,10 +749,12 @@ func (b *EthereumRPC) GetBlock(hash string, height uint32) (*bchain.Block, error
 	}
 	var head rpcHeader
 	if err := json.Unmarshal(raw, &head); err != nil {
+		glog.Info("Unmarshal rpcHeader ", string(raw))
 		return nil, errors.Annotatef(err, "hash %v, height %v", hash, height)
 	}
 	var body rpcBlockTransactions
 	if err := json.Unmarshal(raw, &body); err != nil {
+		glog.Info("Unmarshal rpcBlockTransactions ", string(raw))
 		return nil, errors.Annotatef(err, "hash %v, height %v", hash, height)
 	}
 	bbh, err := b.ethHeaderToBlockHeader(&head)
