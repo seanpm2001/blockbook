@@ -174,6 +174,12 @@ func (b *EthereumRPC) Initialize() error {
 			// disable AlternativeEstimateFee logic
 			b.alternativeFeeProvider = nil
 		}
+	} else if b.ChainConfig.AlternativeEstimateFee == "infura" {
+		if b.alternativeFeeProvider, err = NewInfuraFeesProvider(b, b.ChainConfig.AlternativeEstimateFeeParams); err != nil {
+			glog.Error("NewInfuraFeesProvider error ", err, " Reverting to default estimateFee functionality")
+			// disable AlternativeEstimateFee logic
+			b.alternativeFeeProvider = nil
+		}
 	}
 
 	glog.Info("rpc: block chain ", b.Network)
